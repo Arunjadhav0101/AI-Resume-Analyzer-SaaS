@@ -15,7 +15,7 @@ def extract_text_from_pdf(file_path: str) -> str:
             text += page.extract_text() + "\n"
     return text
 
-def analyze_resume(text: str) -> Dict[str, Any]:
+def analyze_resume(text: str, job_role: str) -> Dict[str, Any]:
     if not settings.GEMINI_API_KEY or settings.GEMINI_API_KEY.lower() == "test":
         # Mocking for local test with "test" API KEY
         return {
@@ -28,7 +28,8 @@ def analyze_resume(text: str) -> Dict[str, Any]:
     model = init_gemini()
     prompt = f"""
     You are an expert ATS (Applicant Tracking System) reviewer and recruiter.
-    Analyze the following resume text and provide a JSON response with exactly these fields:
+    The candidate is applying for the job role: {job_role}.
+    Analyze the following resume text against the specified job role and provide a JSON response with exactly these fields:
     - "ats_score": A float between 0 and 100 representing how well optimized this resume is.
     - "skill_gap": A short string describing what skills the candidate might be missing for modern software engineering roles.
     - "suggestions": A short string with 2-3 actionable suggestions for improving the resume.

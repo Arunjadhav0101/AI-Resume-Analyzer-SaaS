@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, UploadFile, File
+from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form
 from sqlalchemy.orm import Session
 from app.api.deps import get_db, get_current_user
 from app.models.models import User, Resume, Analysis
@@ -12,6 +12,7 @@ router = APIRouter()
 @router.post("/upload", response_model=ResumeResponse)
 async def upload_resume(
     file: UploadFile = File(...),
+    job_role: str = Form(...),
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
@@ -37,7 +38,7 @@ async def upload_resume(
         
     # extract and analyze
     text = extract_text_from_pdf(local_file_path)
-    analysis_results = analyze_resume(text)
+    analysis_results = analyze_resume(text, job_role)
     
     analysis = Analysis(
         resume_id=resume.id,

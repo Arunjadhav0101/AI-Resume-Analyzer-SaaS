@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 export default function Dashboard() {
     const [resumes, setResumes] = useState<any[]>([]);
     const [file, setFile] = useState<File | null>(null);
+    const [jobRole, setJobRole] = useState("");
     const [uploading, setUploading] = useState(false);
     const router = useRouter();
 
@@ -43,6 +44,7 @@ export default function Dashboard() {
         const token = localStorage.getItem("token");
         const formData = new FormData();
         formData.append("file", file);
+        formData.append("job_role", jobRole);
 
         setUploading(true);
         try {
@@ -53,6 +55,7 @@ export default function Dashboard() {
             });
             if (res.ok) {
                 setFile(null);
+                setJobRole("");
                 fetchResumes(); // reload
             }
         } catch (err) {
@@ -79,6 +82,17 @@ export default function Dashboard() {
                     <div className="lg:col-span-1 border border-gray-800 rounded-xl p-6 bg-gray-800/20">
                         <h2 className="text-xl font-semibold mb-4 text-blue-300">Upload New Resume</h2>
                         <form onSubmit={handleUpload} className="flex flex-col gap-4">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-400 mb-1">Target Job Role</label>
+                                <input
+                                    type="text"
+                                    value={jobRole}
+                                    onChange={(e) => setJobRole(e.target.value)}
+                                    placeholder="e.g. Software Engineer"
+                                    className="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-blue-500 transition-colors"
+                                    required
+                                />
+                            </div>
                             <label className="border-2 border-dashed border-gray-600 rounded-xl p-8 hover:border-blue-500 transition-colors cursor-pointer text-center group">
                                 <input
                                     type="file"
@@ -91,7 +105,7 @@ export default function Dashboard() {
                             </label>
                             <button
                                 type="submit"
-                                disabled={!file || uploading}
+                                disabled={!file || !jobRole || uploading}
                                 className="py-3 px-4 rounded-lg bg-blue-600 hover:bg-blue-500 disabled:bg-gray-700 disabled:text-gray-400 font-semibold transition-colors mt-2"
                             >
                                 {uploading ? "Analyzing..." : "Upload & Analyze"}
