@@ -6,7 +6,7 @@ from typing import Dict, Any
 
 def init_gemini():
     genai.configure(api_key=settings.GEMINI_API_KEY)
-    return genai.GenerativeModel("gemini-2.0-flash")
+    return genai.GenerativeModel("gemini-2.5-flash")
 
 def extract_text_from_pdf(file_path: str) -> str:
     text = ""
