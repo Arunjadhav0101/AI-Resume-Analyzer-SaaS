@@ -149,3 +149,5 @@ AI-Resume-Analyzer-SaaS/
 │
 └── docker-compose.yml        # PostgreSQL Container Setup
 ```
+## 👨‍💻 Author
+Built and maintained by **Arun Jadhav**.
